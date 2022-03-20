@@ -6,6 +6,7 @@
 <c:set var="actRep" value="${ForwardConst.ACT_REP.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
 <c:set var="commEdt" value="${ForwardConst.CMD_EDIT.getValue()}" />
+<c:set var="commLike" value="${ForwardConst.CMD_LIKE.getValue()}" />
 
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
@@ -39,7 +40,12 @@
                 </tr>
             </tbody>
         </table>
-
+            <p>
+            <a href="<c:url value='?action=${actRep}&command=${commLike}&id=${report.id}' />">
+            <i class="fa-solid fa-thumbs-up"></i>
+            </a>
+            <span><c:out value="${like_count}" /></span>
+            </p>
         <c:if test="${sessionScope.login_employee.id == report.employee.id}">
             <p>
                 <a href="<c:url value='?action=${actRep}&command=${commEdt}&id=${report.id}' />">この日報を編集する</a>

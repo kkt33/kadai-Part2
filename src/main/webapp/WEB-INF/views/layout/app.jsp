@@ -18,6 +18,7 @@
     <title><c:out value="日報管理システム" /></title>
     <link rel="stylesheet" href="<c:url value='/css/reset.css' />">
     <link rel="stylesheet" href="<c:url value='/css/style.css' />">
+    <script src="https://kit.fontawesome.com/3e0a082680.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="wrapper">

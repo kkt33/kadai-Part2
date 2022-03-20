@@ -7,11 +7,13 @@ import java.util.List;
 import javax.servlet.ServletException;
 
 import actions.views.EmployeeView;
+import actions.views.LikeView;
 import actions.views.ReportView;
 import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
+import services.LikeService;
 import services.ReportService;
 
 /**
@@ -21,6 +23,7 @@ import services.ReportService;
 public class ReportAction extends ActionBase {
 
     private ReportService service;
+    private LikeService likeService;
 
     /**
      * メソッドを実行する
@@ -29,10 +32,12 @@ public class ReportAction extends ActionBase {
     public void process() throws ServletException, IOException {
 
         service = new ReportService();
+        likeService = new LikeService();
 
         //メソッドを実行
         invoke();
         service.close();
+        likeService.close();
     }
 
     /**
@@ -156,12 +161,43 @@ public class ReportAction extends ActionBase {
             forward(ForwardConst.FW_ERR_UNKNOWN);
 
         } else {
+            //リクエストパラメータから日報IDを取得
+            String repId = getRequestParam(AttributeConst.REP_ID);
+            long likeCount = likeService.count(repId);
 
             putRequestScope(AttributeConst.REPORT, rv); //取得した日報データ
+
+            putRequestScope(AttributeConst.REP_LIKE_COUNT, likeCount); //取得したいいねのカウント
 
             //詳細画面を表示
             forward(ForwardConst.FW_REP_SHOW);
         }
+    }
+
+    /**
+     * いいねまたは取り消し
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void like() throws ServletException, IOException {
+        //セッションから従業員ID、リクエストパラメータから日報IDを取得する。
+        String repId = getRequestParam(AttributeConst.REP_ID);
+        String empId = ((EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP)).getId().toString();
+
+        //いいねのデータリスト取得
+        List<LikeView> likes = likeService.countByEmployee(empId, repId);
+
+        if (likes.size() == 0) {
+            likeService.create(new LikeView(null, empId, repId));
+        } else {
+            for (LikeView like : likes) {
+                likeService.delete(like);
+            }
+        }
+        //詳細画面を表示
+        //forward(ForwardConst.FW_REP_SHOW);
+        this.show();
+
     }
 
     /**
@@ -235,6 +271,5 @@ public class ReportAction extends ActionBase {
             }
         }
     }
-
 
 }

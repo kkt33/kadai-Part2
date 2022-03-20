@@ -40,14 +40,24 @@ public interface JpaConst {
     String REP_COL_CREATED_AT = "created_at"; //登録日時
     String REP_COL_UPDATED_AT = "updated_at"; //更新日時
 
+    //いいねテーブル
+    String TABLE_LIK = "likes"; //テーブル名
+    //いいねテーブルカラム
+    String LIK_COL_ID = "id"; //id
+    String LIK_COL_EMP = "employee_id"; //いいねした従業員のid
+    String LIK_COL_REP = "report_id"; //日報のid
+
     //Entity名
     String ENTITY_EMP = "employee"; //従業員
     String ENTITY_REP = "report"; //日報
+    String ENTITY_LIK = "like"; //いいね
 
     //JPQL内パラメータ
     String JPQL_PARM_CODE = "code"; //社員番号
     String JPQL_PARM_PASSWORD = "password"; //パスワード
     String JPQL_PARM_EMPLOYEE = "employee"; //従業員
+    String JPQL_PARM_REPORT_ID = "report_id"; //日報ID
+    String JPQL_PARM_EMPLOYEE_ID = "employee_id"; //従業員ID
 
     //NamedQueryの nameとquery
     //全ての従業員をidの降順に取得する
@@ -74,5 +84,11 @@ public interface JpaConst {
     //指定した従業員が作成した日報の件数を取得する
     String Q_REP_COUNT_ALL_MINE = ENTITY_REP + ".countAllMine";
     String Q_REP_COUNT_ALL_MINE_DEF = "SELECT COUNT(r) FROM Report AS r WHERE r.employee = :" + JPQL_PARM_EMPLOYEE;
+  //指定した日報のいいねの件数を取得する
+    String Q_LIK_COUNT = ENTITY_LIK + ".count";
+    String Q_LIK_COUNT_DEF = "SELECT COUNT(l) FROM Like AS l WHERE l.reportId = :" + JPQL_PARM_REPORT_ID;
+    //指定した従業員が日報へのいいねデータの取得する
+    String Q_LIK_COUNT_BY_EMPLOYEE = ENTITY_LIK + ".countByEmployee";
+    String Q_LIK_COUNT_BY_EMPLOYEE_DEF = "SELECT l FROM Like AS l WHERE l.reportId = :" + JPQL_PARM_REPORT_ID + " AND l.employeeId = :" + JPQL_PARM_EMPLOYEE_ID;
 
 }
